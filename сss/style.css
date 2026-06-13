@@ -1,0 +1,634 @@
+/* Базові налаштування */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+        }
+        /* Базовий стан елементів до появи (вони сховані та зміщені вниз) */
+.photo-frame, 
+.typography-block, 
+.calendar-wrapper, 
+.timing-title, 
+.timing-subtitle, 
+.map-container, 
+.envelope-wrapper {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.215, 0.610, 0.355, 1), 
+                transform 0.8s cubic-bezier(0.215, 0.610, 0.355, 1);
+    will-change: transform, opacity;
+}
+
+/* Стан, коли слайд став активним (клас .visible додано через JS) */
+.slide.visible .photo-frame,
+.slide.visible .calendar-wrapper,
+.slide.visible .map-container,
+.slide.visible .envelope-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Елегантна затримка (delay) для тексту, щоб він з'являвся трохи пізніше за фото */
+.slide.visible .typography-block {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.3s; /* Текст випливе на 0.3 сек пізніше */
+}
+
+.slide.visible .timing-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.1s;
+}
+
+.slide.visible .timing-subtitle {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+}
+
+/* Особлива плавна поява для мапи (слайд 3) */
+.slide.visible .map-container {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s;
+}
+
+/* Анімація самої пунктирної лінії (вона буде «проявлятися» як нитка) */
+.map-svg-overlay path {
+    stroke-dasharray: 4 4;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 2s ease-in-out;
+    transition-delay: 0.6s;
+}
+
+.slide.visible .map-svg-overlay path {
+    stroke-dashoffset: 0; /* Лінія красиво почне рух після появи мапи */
+}
+
+        /* Контейнер-стрічка TikTok/Reels */
+        .tiktok-container {
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tiktok-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Слайди */
+        .slide {
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- ВЕРТИКАЛЬНИЙ ІНДИКАТОР (ПАГІНАЦІЯ) --- */
+        .slide-indicator {
+            position: fixed;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100; /* Щоб завжди був поверх контенту */
+            background: rgba(255, 255, 255, 0.4);
+            padding: 10px 6px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px); /* Легке розмиття фону під точками */
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        /* Активний стан кружечка */
+        .dot.active {
+            background-color: #1a1a1a; /* Темний колір для перших слайдів */
+            transform: scale(1.3);
+        }
+
+        /* Спеціальний білий індикатор для темних слайдів, якщо знадобиться */
+        .light-bg .dot.active {
+            background-color: #000000;
+        }
+
+        /* --- СЛАЙД 1: Обкладинка --- */
+        .slide-one {
+            background-color: #ffffff;
+            padding: 40px 20px 60px 20px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .photo-frame {
+            width: 100%;
+            max-width: 450px;
+            height: 65%;
+            overflow: hidden;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .typography-block {
+            text-align: center;
+            width: 100%;
+        }
+
+        .main-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: #1a1a1a;
+            font-weight: 400;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .names-subtitle {
+            font-size: 1.1rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: #2c2c2c;
+            font-weight: 400;
+            margin-bottom: 25px;
+        }
+
+        .date-string {
+            font-size: 1.2rem;
+            letter-spacing: 7px;
+            color: #4a4a4a;
+            font-weight: 300;
+        }
+
+        /* --- СЛАЙД 2: Календар --- */
+        .slide-two {
+            background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), 
+                        url('../img/поцілунок.jpg') center center no-repeat;
+            background-size: cover;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .calendar-wrapper {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .calendar-names {
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: 'Cormorant Garamond', serif;
+            margin-bottom: 30px;
+            color: #111;
+        }
+
+        .month-name {
+            font-size: 1.1rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: #222;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px 5px;
+            margin-bottom: 35px;
+        }
+
+        .weekday {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .day {
+            font-size: 1.1rem;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 35px;
+        }
+
+        .selected-day {
+            font-weight: bold;
+            color: #000;
+        }
+
+        .selected-day::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d93838' stroke-width='1.5' stroke-dasharray='3 3'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") center center no-repeat;
+            background-size: contain;
+            z-index: 1;
+        }
+
+        .invite-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            color: #2c2c2c;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        .sub-invite-text {
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* --- СЛАЙД 3: ТАЙМІНГ ТА КАРТА --- */
+        .slide-three {
+            background-color: #F3F4EF;
+            padding: 30px 20px;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+        }
+
+        .timing-title {
+            font-size: 2.2rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            font-weight: 400;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            color: #111;
+        }
+
+        .timing-subtitle {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            color: #444;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        /* Контейнер інтерактивної карти */
+        .map-container {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            height: 60vh;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Блоки локацій як інтерактивні посилання */
+        .location-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            z-index: 5;
+            transition: transform 0.2s ease;
+        }
+        
+        .location-link:active {
+            transform: scale(0.98);
+        }
+
+        .location-heading {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 4px;
+        }
+
+        .location-details {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .location-img {
+            width: 120px;
+            height: 90px;
+            object-fit: contain;
+            margin: 8px 0;
+            border-radius: 4px;
+        }
+
+        /* SVG для пунктирної лінії та маркерів */
+        .map-svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Пропускає кліки на посилання */
+            z-index: 2;
+        }
+
+        .map-hint {
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: #8c7e6c;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        /* --- СЛАЙД 4: RSVP КОНВЕРТ --- */
+.slide-four {
+    background-color: #f3ede4; /* Легкий кремовий фон для всього слайда */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Сам паперовий конверт */
+.envelope-wrapper {
+    width: 100%;
+    max-width: 380px;
+    background: #ffffff;
+    padding: 50px 30px;
+    border-radius: 4px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eae5dc;
+}
+
+/* Імітація трикутного клапана конверта зверху */
+.envelope-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(180deg, #faf8f5 0%, rgba(255,255,255,0) 100%);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+    pointer-events: none;
+}
+
+/* Текстовий блок */
+.rsvp-text {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.5rem;
+    color: #2c2c2c;
+    line-height: 1.5;
+    margin-bottom: 40px;
+    z-index: 2; /* Щоб текст був поверх ліній клапана */
+}
+
+.accent-date {
+    font-weight: 600;
+    color: #000000;
+    border-bottom: 1px dashed #a62626;
+}
+
+/* КНОПКА: ВОСКОВА ПЕЧАТКА */
+.wax-seal-button {
+    width: 130px;
+    height: 130px;
+    background-color: #942222; /* Насичений винно-червоний колір воску */
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    
+    /* Ефект нерівних країв справжнього розплавленого воску */
+    box-shadow: 
+        inset 0 0 12px rgba(0,0,0,0.4),
+        0 6px 15px rgba(148,34,34,0.35),
+        2px 3px 6px rgba(0,0,0,0.15);
+        
+    /* Легка пульсація, щоб гість розумів, що сюди треба тицяти */
+    animation: sealPulse 2.5s infinite ease-in-out;
+    transition: transform 0.2s ease;
+}
+
+/* Бортик всередині печатки для об'єму */
+.wax-seal-button::after {
+    content: '';
+    position: absolute;
+    width: 106px;
+    height: 106px;
+    border-radius: 50%;
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+}
+
+.wax-seal-button:active {
+    transform: scale(0.95);
+}
+
+/* Текст всередині воскової печатки */
+.seal-inner-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    line-height: 1.3;
+    width: 85px;
+    text-align: center;
+    pointer-events: none;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+/* Нижній підпис */
+.signature {
+    margin-top: 30px;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    color: #7a7368;
+    text-transform: uppercase;
+}
+
+/* Анімація м'якого погойдування/пульсації для печатки */
+@keyframes sealPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.04); box-shadow: inset 0 0 12px rgba(0,0,0,0.4), 0 8px 20px rgba(148,34,34,0.45); }
+    100% { transform: scale(1); }
+}
+
+        /* Тимчасові стилі для тестів наступних слайдів
+        .slide-three-temp { background-color: #f4ede4; justify-content: center; align-items: center; }
+        .slide-four-temp { background-color: #eaddca; justify-content: center; align-items: center; } */
+
+        .swipe-hint {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #888;
+            animation: bounce 2s infinite;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+            40% { transform: translate(-50%, -8px); }
+            60% { transform: translate(-50%, -4px); }
+        }
+
+
+/* КНОПКА-СЕРЦЕ */
+.wax-seal-heart {
+    width: 150px;
+    height: 150px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    
+    /* Об'ємна тінь навколо всього серця */
+    filter: drop-shadow(0 8px 15px rgba(148, 34, 34, 0.4));
+    
+    /* Анімація пульсації */
+    animation: heartPulse 2.5s infinite ease-in-out;
+    transition: transform 0.2s ease;
+}
+
+.wax-seal-heart:active {
+    transform: scale(0.92);
+}
+
+/* Стилізація самого SVG воску */
+.seal-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    fill: #942222; /* Колір червоного воску */
+    
+    /* Внутрішня тінь для ефекту відтиску (імітуємо через заміну яскравості на краях) */
+    filter: brightness(0.95); 
+}
+
+/* Текст, який центрується точно по центру серця */
+.seal-inner-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    line-height: 1.4;
+    width: 85px; /* Обмежуємо ширину, щоб текст гарно розбивався всередині серця */
+    text-align: center;
+    position: relative;
+    z-index: 12;
+    pointer-events: none;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    margin-top: -5px; /* Легке зміщення вгору, бо анатомічний центр серця візуально вище */
+}
+
+/* Оновлена анімація пульсації для серця */
+@keyframes heartPulse {
+    0% { 
+        transform: scale(1); 
+        filter: drop-shadow(0 6px 12px rgba(148, 34, 34, 0.35));
+    }
+    50% { 
+        transform: scale(1.05); 
+        filter: drop-shadow(0 10px 22px rgba(148, 34, 34, 0.5));
+    }
+    100% { 
+        transform: scale(1); 
+        filter: drop-shadow(0 6px 12px rgba(148, 34, 34, 0.35));
+    }
+}
+
+.developer-footer {
+    margin-top: 40px;
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    color: #8a8378; /* Стриманий колір, що пасує до загального бежу */
+    text-transform: uppercase;
+    font-weight: 400;
+    z-index: 5;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+/* Стиль самого посилання */
+.dev-link {
+    color: #1a1a1a; /* Робимо твій нік трохи темнішим, щоб виділявся */
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.2); /* Тонке підкреслення */
+    transition: all 0.3s ease;
+}
+
+/* Ефект при взаємодії */
+.developer-footer:hover,
+.dev-link:hover {
+    opacity: 1;
+    color: #942222; /* При наведенні нік підсвічується кольором воскової печатки */
+    border-bottom-color: #942222;
+}

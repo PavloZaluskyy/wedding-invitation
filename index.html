@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Запрошення на весілля</title>
+    <link rel="icon" type="image/x-icon" href="./img/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./сss/style.css">
+</head>
+<body>
+<div class="slide-indicator">
+        <div class="dot active" data-slide="0"></div>
+        <div class="dot" data-slide="1"></div>
+        <div class="dot" data-slide="2"></div>
+        <div class="dot" data-slide="3"></div>
+    </div>
+
+    <div class="tiktok-container">
+        
+        <section class="slide slide-one" data-index="0">
+            <div class="photo-frame">
+                <img src="./img/квіти.jpg" alt="Vyacheslav and Diana">
+            </div>
+            <div class="typography-block">
+                <h1 class="main-title">Weddings day</h1>
+                <div class="names-subtitle">Vyacheslav and Diana</div>
+                <div class="date-string">04.07.2026</div>
+            </div>
+            <div class="swipe-hint">Свайпніть вгору ⇅</div>
+        </section>
+
+        <section class="slide slide-two" data-index="1">
+            <div class="calendar-wrapper">
+                <div class="calendar-names">Vyacheslav & Diana</div>
+                <div class="month-name">Липень</div>
+                <div class="calendar-grid">
+                    <div class="weekday">Пн</div>
+                    <div class="weekday">Вт</div>
+                    <div class="weekday">Ср</div>
+                    <div class="weekday">Чт</div>
+                    <div class="weekday">Пт</div>
+                    <div class="weekday">Сб</div>
+                    <div class="weekday">Нд</div>
+                    
+                    <div class="day" style="color: #aaa;">29</div>
+                    <div class="day" style="color: #aaa;">30</div>
+                    <div class="day">1</div>
+                    <div class="day">2</div>
+                    <div class="day">3</div>
+                    <div class="day selected-day">4</div>
+                    <div class="day">5</div>
+                </div>
+                <p class="invite-text">
+                    "Наша мрія оживає в цьому дні - і ми щиро хочемо прожити його разом із тими, кого любимо."
+                </p>
+                <p class="sub-invite-text">
+                    Запрошуємо вас бути частиною цієї особливої миті.
+                </p>
+            </div>
+            <div class="swipe-hint">Свайпніть вгору ⇅</div>
+        </section>
+
+        <section class="slide slide-three" data-index="2">
+            <h2 class="timing-title">Таймінг</h2>
+            <div class="timing-subtitle">Wedding Timing Map</div>
+
+            <div class="map-container">
+                <svg class="map-svg-overlay" viewBox="0 0 360 420" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 230 115 C 230 180, 100 180, 100 240 C 100 290, 150 320, 150 340" 
+                          fill="none" stroke="#222222" stroke-width="1.5" stroke-dasharray="4 4" />
+                    
+                    <!-- <g transform="translate(142, 215) scale(0.7)">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" 
+                              fill="#ffffff" stroke="#a62626" stroke-width="1.5"/>
+                        <path d="M12 17.5l-1.1-1C6.5 12.5 4 10 4 7 4 5 5.5 3.5 7.5 3.5c1.2 0 2.3.6 3 1.5.7-.9 1.8-1.5 3-1.5 2 0 3.5 1.5 3.5 3.5 0 3-2.5 5.5-6.9 9.5L12 17.5z" 
+                              fill="#a62626"/>
+                    </g> -->
+                </svg>
+
+                <a href="https://maps.google.com/?q=Церква+Пресвятої+Євхаристії+Градівка" target="_blank" class="location-link" style="align-items: flex-end; padding-right: 20px;">
+                    <div style="text-align: right; max-width: 260px;">
+                        <div class="location-heading">Таїнство вінчання відбудеться о 13:00</div>
+                        <div class="location-details">Церква Пресвятої Євхаристії<br>с.Градівка, Городоцький р-н.</div>
+                    </div>
+                    <img src="./img/церква2.jpg" alt="Церква" class="location-img" style="margin-right: 40px;">
+                </a>
+
+                <a href="https://maps.google.com/?q=Ресторан+Золоте+Руно+Рудки" target="_blank" class="location-link" style="align-items: flex-start; padding-left: 20px; margin-bottom: 15px;">
+                    <img src="./img/ресторан.jpg" alt="Ресторан" class="location-img" style="margin-left: 40px;">
+                    <div style="text-align: left; max-width: 260px;">
+                        <div class="location-heading">Святкування продовжиться о 14:00</div>
+                        <div class="location-details">В ресторані "Золоте Руно"<br>м.Рудки, вул.Садова 36</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="map-hint">∗ Натисніть на зображення або адресу, щоб відкрити карту</div>
+            <div class="swipe-hint">Свайпніть вгору ⇅</div>
+        </section>
+
+        <section class="slide slide-four" data-index="3">
+        <div class="envelope-wrapper">
+            <p class="rsvp-text">
+                Будь ласка,<br>
+                підтвердіть вашу присутність<br>
+                до <span class="accent-date">20 червня</span>
+            </p>
+            
+            <button class="wax-seal-button" onclick="handleRSVP()">
+                <span class="seal-inner-text">натисни щоб підтвердити</span>
+            </button>
+            <!-- <button class="wax-seal-heart" onclick="handleRSVP()">
+                <svg class="seal-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                <span class="seal-inner-text">натисни щоб підтвердити</span>
+            </button>
+        </div>
+         -->
+        <div class="signature">З любов'ю, В'ячеслав та Діана</div>
+        </div>
+    <div class="developer-footer">
+    Made with ❤️ by 
+    <a href="https://t.me/justlife2" target="_blank" class="dev-link">
+        Pavlo Zaluskyy
+    </a>
+    </div>
+    </section>
+
+    
+
+    <script src="./js/script.js"></script>
+</body>
+</html>
